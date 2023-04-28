@@ -1,0 +1,125 @@
+'menu': [
+  {
+    'label': 'View'
+    'submenu': [
+      {
+        'label': 'Toggle Git Tab'
+        'command': 'github:toggle-git-tab'
+      }
+      {
+        'label': 'Toggle GitHub Tab'
+        'command': 'github:toggle-github-tab'
+      }
+    ]
+  }
+  {
+    'label': 'Packages'
+    'submenu': [
+      {
+        'label': 'GitHub',
+        'submenu': [
+          {
+            'label': 'Toggle Git Tab'
+            'command': 'github:toggle-git-tab'
+          }
+          {
+            'label': 'Toggle GitHub Tab'
+            'command': 'github:toggle-github-tab'
+          }
+        ]
+      }
+    ]
+  }
+]
+'context-menu':
+  '.github-FilePatchListView-item': [
+    {
+      'label': 'Open File'
+      'command': 'github:open-file'
+    }
+  ]
+  '.github-FilePatchView': [
+    {
+      'label': 'Open File'
+      'command': 'github:open-file'
+    }
+  ]
+  '.github-FilePatchView.is-staged': [
+    {
+      'label': 'Unstage Selection'
+      'command': 'core:confirm'
+    }
+  ]
+  '.github-FilePatchView.is-unstaged': [
+    {
+      'label': 'Stage Selection'
+      'command': 'core:confirm'
+    }
+    {
+      'type': 'separator'
+    }
+    {
+      'label': 'Discard Selection'
+      'command': 'github:discard-selected-lines'
+    }
+  ]
+  '.github-DotComMarkdownHtml .issue-link': [
+    {
+      'label': 'Open in New Tab'
+      'command': 'github:open-link-in-new-tab'
+    }
+    {
+      'label': 'Open in This Tab'
+      'command': 'github:open-link-in-this-tab'
+    }
+    {
+      'label': 'Open in Browser'
+      'command': 'github:open-link-in-browser'
+    }
+  ]
+  '.github-CommitView': [
+    {
+      'type': 'separator'
+    }
+    {
+      'label': 'Toggle Expanded Commit Message Editor'
+      'command': 'github:toggle-expanded-commit-message-editor'
+    }
+  ]
+  'atom-text-editor': [
+    {
+      'label': 'View Unstaged Changes',
+      'command': 'github:view-unstaged-changes-for-current-file'
+    }
+    {
+      'label': 'View Staged Changes',
+      'command': 'github:view-staged-changes-for-current-file'
+    }
+  ]
+  '.github-PushPull': [
+    {
+      'label': 'Fetch',
+      'command': 'github:fetch'
+    }
+    {
+      'label': 'Pull',
+      'command': 'github:pull'
+    }
+    {
+        'type': 'separator'
+    }
+    {
+        'label': 'Push',
+        'command': 'github:push'
+    }
+    {
+        'label': 'Force Push',
+        'command': 'github:force-push'
+    }
+  ]
+  '.most-recent': [
+    {
+      'label': 'Amend'
+      'command': 'github:amend-last-commit'
+    }
+  ]
