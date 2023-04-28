@@ -1,0 +1,438 @@
+@import "variables";
+
+@avatar-size: 16px;
+@font-size-body: 1.125em;
+
+// PR ------------------------------------
+
+.github-Pr {
+  flex: 1;
+  overflow-x: auto;
+
+  .github-IssueishDetailView-headerBadge {
+    margin-right: 0;
+  }
+}
+
+// Header  ----------------------------------------------
+
+.github-PrHeader {
+  display: flex;
+  line-height: 2.25;
+  padding: @component-padding/2 @component-padding;
+  padding-left: .2em;
+  border-bottom: 1px solid @base-border-color;
+
+  &-backButton {
+    padding: 0;
+    padding-right: @component-padding;
+    margin-right: @component-padding;
+    line-height: inherit;
+    border: none;
+    border-right: 1px solid @base-border-color;
+    background-color: transparent;
+  }
+
+  &-link {
+    margin-right: auto;
+  }
+
+  &-id {
+    color: @text-color-subtle;
+  }
+
+  &-refreshButton {
+    color: @text-color-subtle;
+    &:before {
+      margin-right: 0;
+    }
+  }
+}
+
+// Overview  ----------------------------------------------
+
+
+
+.github-Overview {
+  padding: @component-padding/2;
+  &-row {
+    display: flex;
+    align-items: center;
+    padding: @component-padding/2;
+  }
+
+  &-label {
+    flex: 1;
+    line-height: 2;
+    color: @text-color-subtle;
+    margin-right: @component-padding;
+    border-bottom: 1px dashed @base-border-color;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  &-avatar {
+    width: 18px;
+    height: 18px;
+    margin-left: @component-padding/2;
+    border-radius: @component-border-radius;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  &-title {
+    font-size: 1.25em;
+    line-height: 20px;
+    font-weight: 500;
+  }
+
+  &-branchDirection {
+    padding: 0 .25em;
+    color: @text-color-subtle;
+  }
+
+  &-badge {
+    display: inline-block;
+    margin-left: @component-padding/2;
+    padding: 0 .5em;
+    line-height: 1.6em;
+    font-size: .95em;
+    font-weight: 600;
+    border-radius: @component-border-radius;
+    color: white;
+    &:nth-child(2) { color: hsl(0, 0%, 100%); background-color: hsl(280, 80%, 45%); }
+    &:nth-child(3) { color: hsl(43, 100%, 8%); background-color: hsl(43, 90%, 66%); }
+  }
+
+  &-checkoutButton {
+    // margin-left: auto;
+  }
+}
+
+// Conversation  ----------------------------------------------
+
+.github-Conversation {
+  .github-DotComMarkdownHtml {
+    padding: @component-padding;
+    font-size: .95em;
+  }
+  .github-PrTimeline .timeline-item {
+    padding: 0;
+    .info-row {
+      margin: 0;
+      padding: @component-padding 0 0 @component-padding;
+    }
+  }
+}
+
+// Changes  ----------------------------------------------
+
+.github-Changes {
+  padding: @component-padding/2 0;
+  &-item {
+    padding: @component-padding/2.5 @component-padding;
+    &:hover {
+      background-color: @background-color-highlight;
+    }
+    &:nth-child(3) {
+      border-top: 1px solid @base-border-color;
+    }
+  }
+  &-path {
+    color: @text-color-subtle;
+  }
+  &-file {
+    color: @text-color-highlight;
+  }
+}
+
+// Commits  ----------------------------------------------
+
+.github-Commits .github-RecentCommit-avatar {
+  width: 18px;
+  height: 18px;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+// Build Status  ----------------------------------------------
+
+.github-Pr .github-PrStatuses {
+  &-header {
+    border: none;
+  }
+  &-list-item {
+    border: none;
+    border-top: 1px solid @base-border-color;
+  }
+  &--success:before {
+    margin-right: 0;
+    width: auto;
+  }
+}
+
+
+// Reviews  ----------------------------------------------
+
+.github-Reviews {
+  flex: 1;
+  padding: @component-padding;
+  overflow-y: auto;
+
+  &-header {
+    display: flex;
+    padding-bottom: @component-padding;
+    border-bottom: 1px solid @base-border-color;
+  }
+
+  &-title {
+    flex: 1;
+    font-size: 1.4em;
+    margin: 0;
+  }
+
+  &-count {
+    color: @text-color-subtle;
+  }
+
+  &-countNr {
+    color: @text-color-highlight;
+  }
+
+  &-progessBar {
+    width: 5em;
+    margin-left: @component-padding;
+  }
+}
+
+.github-Review {
+
+  & + & {
+    margin-top: @component-padding*3;
+  }
+
+  &-header {
+    display: flex;
+  }
+
+  .github-Review-headerTimeAgo {
+    margin-left: auto;
+    color: @text-color-subtle;
+  }
+
+  &-icon  {
+    vertical-align: -3px;
+    &.icon-check {
+      color: @text-color-success;
+    }
+    &.icon-alert {
+      color: @text-color-warning;
+    }
+    &.icon-comment {
+      color: @text-color-subtle;
+    }
+  }
+
+  &-avatar {
+    margin-right: .5em;
+    width: @avatar-size;
+    height: @avatar-size;
+    border-radius: @component-border-radius;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  &-type {
+    color: @text-color-subtle;
+  }
+
+  &-summary {
+    position: relative;
+    margin-top: @component-padding;
+    padding: @component-padding;
+    font-size: @font-size-body;
+    border: 1px solid @base-border-color;
+    border-radius: @component-border-radius;
+    background-color: @base-background-color;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: -@component-padding/2;
+      left: 23px; // magic
+      width: @component-padding;
+      height: @component-padding;
+      border-top: inherit;
+      border-left: inherit;
+      background-color: inherit;
+      transform: rotate(45deg);
+    }
+
+    &.is-approved {
+      border-color: fade(@text-color-success, 40%);
+      background-color: mix(@background-color-success, @base-background-color, 12%);
+    }
+    &.is-requesting-changes {
+      border-color: fade(@text-color-warning, 40%);
+      background-color: mix(@background-color-warning, @base-background-color, 10%);
+    }
+  }
+
+  &-thread {
+    position: relative;
+    margin-top: @component-padding/2;
+
+    &:first-of-type {
+      margin-top: @component-padding;
+    }
+
+    .github-Review-avatar {
+      position: absolute;
+      left: @component-padding;
+    }
+  }
+
+  &-threadHeader {
+    display: flex;
+    align-items: center;
+    padding: 0 @component-padding;
+    cursor: pointer;
+
+    .is-resolved & {
+      &::-webkit-details-marker {
+        display: none;
+      }
+    }
+  }
+
+  &-resolvedIcon:before {
+    font-size: 12px;
+    width: 13px;
+    margin-right: 0;
+  }
+
+  &-path {
+    color: @text-color-subtle;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  &-file {
+    color: @text-color;
+    margin-right: @component-padding/2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  &-line {
+    color: @text-color-subtle;
+    margin-right: @component-padding*2;
+  }
+
+  &-comments {
+    margin: @component-padding/2 0 @component-padding*1.5 0;
+    padding: @component-padding;
+    padding-left: @component-padding + @avatar-size + 5px; // space for avatar
+    padding-top: 0; // added by commet
+    border: 1px solid @base-border-color;
+    border-radius: @component-border-radius;
+    background-color: mix(@base-background-color, @tool-panel-background-color, 33%);
+  }
+
+  &-comment  {
+    margin-top: @component-padding;
+    font-size: @font-size-body;
+  }
+
+  &-commentText  {
+    margin-right: .5em;
+  }
+
+  &-timeAgo {
+    font-size: .9em;
+    color: @text-color-subtle;
+  }
+
+  &-reply {
+    display: flex;
+    margin-top: @component-padding;
+  }
+
+  &-replyInput {
+    flex: 1;
+    width: auto;
+    height: 2.125em;
+    min-height: 2.125em;
+    resize: vertical;
+  }
+
+  &-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: @component-padding;
+  }
+
+  &-infoText {
+    margin-right: @component-padding;
+    color: @text-color-subtle;
+  }
+
+  &-button {
+    margin-left: @component-padding;
+    &.btn.icon {
+      &:before {
+        font-size: 14px;
+      }
+    }
+  }
+
+}
+
+
+// Diff only  ----------------------------------------------
+
+// This hides the rest of the PR infos
+.github-IssueishDetailView-tablist {
+  display: none;
+}
+.github-IssueishDetailView-header,
+.github-PrDetailView-footer.github-PrDetailView-footer {
+  display: none;
+}
+
+.github-FilePatchView-container .line-numbers.old [data-screen-row="38"]::before,
+.github-FilePatchView-container .line-numbers.old [data-screen-row="50"]::before {
+  position: absolute;
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  text-decoration: none;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  content: "\f02b";
+}
+
+
+[data-active-item-path="/Users/simurai/github/atom/src/panel-container-element.js"] .line-number[data-screen-row="57"]::before,
+[data-active-item-path="/Users/simurai/github/atom/src/panel-container-element.js"] .line-number[data-screen-row="67"]::before {
+  position: absolute;
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  text-decoration: none;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  content: "\f02b";
+
+  margin-top: 2px;
+  margin-left: 16px;
+}
