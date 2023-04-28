@@ -1,0 +1,117 @@
+'menu': [
+  {
+    'label': 'View'
+    'submenu': [
+      {
+        'label': 'Toggle Git Tab'
+        'command': 'github:toggle-git-tab'
+      }
+      {
+        'label': 'Toggle GitHub Tab'
+        'command': 'github:toggle-github-tab'
+      }
+    ]
+  }
+  {
+    'label': 'Packages'
+    'submenu': [
+      {
+        'label': 'GitHub',
+        'submenu': [
+          {
+            'label': 'Toggle Git Tab'
+            'command': 'github:toggle-git-tab'
+          }
+          {
+            'label': 'Toggle GitHub Tab'
+            'command': 'github:toggle-github-tab'
+          }
+        ]
+      }
+    ]
+  }
+]
+'context-menu':
+  '.github-FilePatchListView-item': [
+    {
+      'label': 'Open File'
+      'command': 'github:open-file'
+    }
+  ]
+  '.github-FilePatchView': [
+    {
+      'label': 'Open File'
+      'command': 'github:open-file'
+    }
+  ]
+  '.github-FilePatchView.is-staged': [
+    {
+      'label': 'Unstage Selection'
+      'command': 'core:confirm'
+    }
+  ]
+  '.github-FilePatchView.is-unstaged': [
+    {
+      'label': 'Stage Selection'
+      'command': 'core:confirm'
+    }
+    {
+      'type': 'separator'
+    }
+    {
+      'label': 'Discard Selection'
+      'command': 'github:discard-selected-lines'
+    }
+  ]
+  '.github-DotComMarkdownHtml .issue-link': [
+    {
+      'label': 'Open in New Tab'
+      'command': 'github:open-link-in-new-tab'
+    }
+    {
+      'label': 'Open in This Tab'
+      'command': 'github:open-link-in-this-tab'
+    }
+    {
+      'label': 'Open in Browser'
+      'command': 'github:open-link-in-browser'
+    }
+  ]
+  '.github-UnstagedChanges .github-StagingView-header': [
+    {
+      'label': 'Stage All Changes'
+      'command': 'github:stage-all-changes'
+    }
+    {
+      'type': 'separator'
+    }
+    {
+      'label': 'Discard All Changes'
+      'command': 'github:discard-all-changes'
+    }
+  ]
+  '.github-StagedChanges .github-StagingView-header': [
+    {
+      'label': 'Unstage All Changes'
+      'command': 'github:unstage-all-changes'
+    }
+  ]
+  '.github-CommitView': [
+    {
+      'type': 'separator'
+    }
+    {
+      'label': 'Toggle Expanded Commit Message Editor'
+      'command': 'github:toggle-expanded-commit-message-editor'
+    }
+  ]
+  'atom-text-editor': [
+    {
+      'label': 'View Unstaged Changes',
+      'command': 'github:view-unstaged-changes-for-current-file'
+    }
+    {
+      'label': 'View Staged Changes',
+      'command': 'github:view-staged-changes-for-current-file'
+    }
+  ]
