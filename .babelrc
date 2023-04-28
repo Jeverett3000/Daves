@@ -1,0 +1,20 @@
+{
+  "sourceMaps": "inline",
+  "babelrc": false,
+  "plugins": [
+    "relay",
+    "./assert-messages-plugin.js",
+    "chai-assert-async",
+    "transform-object-rest-spread",
+    "transform-es2015-modules-commonjs",
+    "transform-class-properties",
+  ],
+  "presets": [
+    "react",
+  ],
+  "env": {
+    "coverage": {
+      "plugins": ["istanbul"]
+    }
+  }
+}
