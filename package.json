@@ -1,0 +1,203 @@
+{
+  "name": "github",
+  "main": "./lib/index",
+  "version": "0.23.0",
+  "description": "GitHub integration",
+  "repository": "https://github.com/atom/github",
+  "license": "MIT",
+  "scripts": {
+    "test": "cross-env-shell \"${ATOM_SCRIPT_PATH:-atom} --test test\"",
+    "test:coverage": "cross-env ATOM_GITHUB_BABEL_ENV=coverage npm run test",
+    "test:coverage:text": "nyc --reporter=text npm run test:coverage",
+    "test:coverage:html": "nyc --reporter=html npm run test:coverage",
+    "test:coverage:lcov": "npm run test:coverage",
+    "test:snapshot": "cross-env-shell ATOM_GITHUB_TEST_SUITE=snapshot \"${ATOM_SCRIPT_PATH:-atom} --test test\"",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "report:coverage": "nyc report --reporter=cobertura --reporter=html",
+    "lint": "eslint --max-warnings 0 test lib",
+    "fetch-schema": "node script/fetch-schema",
+    "relay": "relay-compiler --src ./lib --schema graphql/schema.graphql"
+  },
+  "engines": {
+    "atom": ">=1.32.0"
+  },
+  "atomTestRunner": "./test/runner",
+  "atomTranspilers": [
+    {
+      "glob": "{lib,test}/**/*.js",
+      "transpiler": "atom-babel6-transpiler",
+      "options": {
+        "cacheKeyFiles": [
+          "package.json",
+          ".babelrc",
+          "assert-messages-plugin.js",
+          "graphql/schema.graphql",
+          ".nycrc.json"
+        ],
+        "setBabelEnv": "ATOM_GITHUB_BABEL_ENV"
+      }
+    }
+  ],
+  "dependencies": {
+    "atom-babel6-transpiler": "1.2.0",
+    "babel-generator": "6.26.1",
+    "babel-plugin-chai-assert-async": "0.1.0",
+    "babel-plugin-relay": "1.6.0",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "6.26.2",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-preset-react": "6.24.1",
+    "bytes": "^3.0.0",
+    "classnames": "2.2.6",
+    "compare-sets": "1.0.1",
+    "dugite": "^1.79.0",
+    "event-kit": "2.5.2",
+    "fs-extra": "4.0.3",
+    "graphql": "0.13.2",
+    "keytar": "4.2.1",
+    "lodash.memoize": "4.1.2",
+    "moment": "2.22.2",
+    "node-emoji": "^1.8.1",
+    "prop-types": "15.6.2",
+    "react": "16.4.0",
+    "react-dom": "16.4.0",
+    "react-relay": "1.6.0",
+    "react-select": "1.2.1",
+    "react-tabs": "^2.3.0",
+    "relay-runtime": "1.6.0",
+    "temp": "0.8.3",
+    "tinycolor2": "1.4.1",
+    "tree-kill": "1.2.0",
+    "underscore-plus": "1.6.8",
+    "what-the-diff": "0.4.0",
+    "what-the-status": "1.0.3",
+    "yubikiri": "1.0.0"
+  },
+  "devDependencies": {
+    "@smashwilson/atom-mocha-test-runner": "1.4.0",
+    "babel-plugin-istanbul": "4.1.6",
+    "chai": "4.1.2",
+    "chai-as-promised": "7.1.1",
+    "coveralls": "^3.0.1",
+    "cross-env": "5.2.0",
+    "cross-unzip": "0.2.1",
+    "dedent-js": "1.0.1",
+    "electron-devtools-installer": "2.2.4",
+    "electron-link": "0.2.2",
+    "electron-mksnapshot": "3.0.0-beta.1",
+    "enzyme": "3.7.0",
+    "enzyme-adapter-react-16": "1.7.0",
+    "eslint": "5.0.1",
+    "eslint-config-fbjs-opensource": "1.0.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "globby": "5.0.0",
+    "hock": "1.3.3",
+    "lodash.isequal": "4.5.0",
+    "mkdirp": "0.5.1",
+    "mocha": "^5.2.0",
+    "mocha-appveyor-reporter": "0.4.1",
+    "mocha-junit-reporter": "1.18.0",
+    "mocha-multi-reporters": "^1.1.7",
+    "mocha-stress": "1.0.0",
+    "node-fetch": "2.3.0",
+    "nyc": "13.0.0",
+    "relay-compiler": "1.6.2",
+    "semver": "5.6.0",
+    "sinon": "6.0.1",
+    "test-until": "1.1.1"
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    },
+    "metrics-reporter": {
+      "versions": {
+        "^1.1.0": "consumeReporter"
+      }
+    }
+  },
+  "configSchema": {
+    "keyboardNavigationDelay": {
+      "type": "number",
+      "default": 300,
+      "description": "How long to wait before showing a diff view after navigating to an entry with the keyboard"
+    },
+    "viewChangesForCurrentFileDiffPaneSplitDirection": {
+      "type": "string",
+      "default": "none",
+      "enum": [
+        "none",
+        "right",
+        "down"
+      ],
+      "title": "Direction to open diff pane",
+      "description": "Direction to split the active pane when showing diff associated with open file. If 'none', the results will be shown in the active pane."
+    },
+    "gitDiagnostics": {
+      "type": "boolean",
+      "default": false,
+      "description": "Write detailed diagnostic information about git operations to the console"
+    },
+    "filesystemEventDiagnostics": {
+      "type": "boolean",
+      "default": false,
+      "description": "Trace observed filesystem events to the console"
+    },
+    "performanceMask": {
+      "type": "array",
+      "default": [
+        ".*"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "Performance event stream patterns to capture"
+    },
+    "performanceToConsole": {
+      "type": "boolean",
+      "default": false,
+      "description": "Log performance data to the console"
+    },
+    "performanceToDirectory": {
+      "type": "string",
+      "default": "",
+      "description": "Log performance data to JSON files in a directory"
+    },
+    "performanceToProfile": {
+      "type": "boolean",
+      "default": false,
+      "description": "Capture CPU profiles"
+    },
+    "automaticCommitMessageWrapping": {
+      "type": "boolean",
+      "default": true,
+      "description": "Hard wrap commit message body in commit box to 72 characters. Does not apply to expanded commit editors, where message formatting is preserved."
+    },
+    "graphicalConflictResolution": {
+      "type": "boolean",
+      "default": true,
+      "description": "Resolve merge conflicts with in-editor controls"
+    },
+    "showDiffIconGutter": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show change regions within a file patch with icons in addition to color"
+    },
+    "excludedUsers": {
+      "type": "string",
+      "default": "",
+      "description": "Comma-separated list of email addresses to exclude from the co-author selection list"
+    }
+  },
+  "deserializers": {
+    "GitTimingsView": "createGitTimingsView",
+    "IssueishDetailItem": "createIssueishPaneItemStub",
+    "IssueishPaneItem": "createIssueishPaneItemStub",
+    "GitDockItem": "createDockItemStub",
+    "GithubDockItem": "createDockItemStub",
+    "FilePatchControllerStub": "createFilePatchControllerStub",
+    "CommitPreviewStub": "createCommitPreviewStub"
+  }
+}
