@@ -1,0 +1,193 @@
+@import "variables";
+
+.github-Blank {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  &-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-footer {
+    flex-shrink: 0;
+    padding: @component-padding*2 @component-padding;
+  }
+
+  &-LargeIcon:before {
+    margin-right: 0;
+    margin-top: @component-padding * 5;
+    margin-bottom: @component-padding * 5;
+    width: auto;
+    height: auto;
+    font-size: 8em;
+    color: mix(@base-background-color, @text-color, 66%); // 2/3 of bg color
+  }
+
+  &-banner, &-context , &-explanation , &-LargeIcon {
+    text-align: center;
+  }
+
+  &-option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &--explained {
+      margin-bottom: @component-padding/2;
+    }
+  }
+
+  &-actionBtn {
+    flex: 1;
+    margin: 0 10%;
+  }
+
+  &-explanation {
+    margin-left: 5%;
+    margin-right: 5%;
+    color: @text-color-subtle;
+  }
+
+  &-tabLink {
+    margin-left: 0.5em;
+
+    .icon {
+      padding-right: 0;
+    }
+  }
+}
+
+.github-Clone , .github-Connect , .github-Create, .github-Publish {
+  &-header span {
+    margin-right: @component-padding/2;
+  }
+
+  hr {
+    border-top-color: @pane-item-border-color;
+  }
+
+  details {
+    summary {
+      cursor: default;
+      user-select: none;
+    }
+
+    main {
+      padding-top: @component-padding;
+    }
+  }
+
+  &-searchResults {
+    &--empty {
+      text-align: center;
+      color: @text-color-subtle;
+    }
+  }
+
+  &-protocol , &-repo {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  &-owner {
+    margin-right: @component-padding/2;
+  }
+
+  &-repo {
+    margin-bottom: @component-padding*2;
+
+    .github-AtomTextEditor-container {
+      margin-left: @component-padding/2;
+      width: 12em;
+
+      atom-text-editor {
+        padding: 4px 0 3px 0;
+      }
+    }
+  }
+
+  &-protocolHeading , &-protocolOption , &-visibilityHeading , &-visibilityOption {
+    margin-right: @component-padding;
+  }
+
+  &-owner {
+    width: 20em;
+
+    &-optionImage {
+      border-radius: 5px;
+      margin-right: @component-padding/2;
+    }
+  }
+
+  &-destinationRow , &-localPathRow , &-repoRow {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  &-rightBumper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: 3em;
+    height: auto;
+    margin: 0;
+    padding: 0 @component-padding;
+
+    &::before {
+      margin-top: -1px;
+      margin-right: 0;
+    }
+  }
+
+  &-sourceRemote , &-upstreamRemote {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    label {
+      margin: 0 @component-padding 0 0;
+    }
+
+    .github-AtomTextEditor-container {
+      width: 10em;
+    }
+  }
+
+  &-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.github-Create , .github-Publish {
+  &-visibilityHeading , &-protocolHeading {
+    display: inline-block;
+  }
+
+  &-visibilityOption , &-protocolOption {
+    display: inline-block;
+    margin-right: @component-padding;
+
+    span::before {
+      margin-left: @component-padding/4;
+      margin-right: @component-padding/4;
+    }
+  }
+
+  &-destination label , &-localPath label {
+    width: 100%;
+  }
+
+  &-localPath atom-text-editor[mini][readonly] {
+    color: @text-color-subtle;
+  }
+}
