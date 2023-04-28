@@ -1,0 +1,93 @@
+'menu': [
+  {
+    'label': 'View'
+    'submenu': [
+      {
+        'label': 'Toggle Git Panel'
+        'command': 'github:toggle-git-panel'
+      }
+    ]
+  }
+  {
+    'label': 'Packages'
+    'submenu': [
+      {
+        'label': 'GitHub',
+        'submenu': [
+          {
+            'label': 'Toggle'
+            'command': 'github:toggle-git-panel'
+          }
+        ]
+      }
+    ]
+  }
+]
+'context-menu':
+  '.github-FilePatchListView-item': [
+    {
+      'label': 'Open File'
+      'command': 'github:open-file'
+    }
+  ]
+  '.github-UnstagedChanges': [
+    {
+      'label': 'Stage'
+      'command': 'core:confirm'
+    }
+    {
+      'type': 'separator'
+    }
+    {
+      'label': 'Discard Changes'
+      'command': 'github:discard-changes-in-selected-files'
+    }
+  ]
+  '.github-StagedChanges': [
+    {
+      'label': 'Unstage'
+      'command': 'core:confirm'
+    }
+  ]
+  '.github-MergeConflictPaths': [
+    {
+      'label': 'Stage'
+      'command': 'core:confirm'
+    },
+    {
+      'type': 'separator'
+    }
+    {
+      'label': 'Resolve File As Ours'
+      'command': 'github:resolve-file-as-ours'
+    },
+    {
+      'label': 'Resolve File As Theirs'
+      'command': 'github:resolve-file-as-theirs'
+    }
+  ]
+  '.github-FilePatchView': [
+    {
+      'label': 'Open File'
+      'command': 'github:open-file'
+    }
+  ]
+  '.github-FilePatchView.is-staged': [
+    {
+      'label': 'Unstage Selection'
+      'command': 'core:confirm'
+    }
+  ]
+  '.github-FilePatchView.is-unstaged': [
+    {
+      'label': 'Stage Selection'
+      'command': 'core:confirm'
+    }
+    {
+      'type': 'separator'
+    }
+    {
+      'label': 'Discard Selection'
+      'command': 'github:discard-selected-lines'
+    }
+  ]

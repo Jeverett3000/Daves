@@ -1,0 +1,43 @@
+version: "{build}"
+
+platform: x64
+
+branches:
+    only:
+      - master
+
+clone_depth: 10
+
+skip_tags: true
+
+environment:
+  APM_TEST_PACKAGES:
+  ATOM_GITHUB_FS_EVENT_LOG: '1'
+  MOCHA_TIMEOUT: '60000'
+  UNTIL_TIMEOUT: '30000'
+
+  matrix:
+  - ATOM_CHANNEL: stable
+  - ATOM_CHANNEL: beta
+
+install:
+  - ps: Install-Product node 4
+
+build_script:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/atom/ci/master/build-package.ps1'))
+
+on_failure:
+  - ps: |-
+      Get-ChildItem -Path "$($env:TEMP)\Atom Crashes\*.dmp" -Recurse | `
+        % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
+      Get-ChildItem -Path ".\*.pdb" -Recurse | `
+        % { 7z a symbols.zip $_.FullName }
+      Push-AppveyorArtifact symbols.zip
+
+      Get-ChildItem -Path ".\*.node" -Recurse | `
+        % { 7z a images.zip $_.FullName }
+      Push-AppveyorArtifact images.zip
+
+test: off
+deploy: off

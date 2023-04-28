@@ -1,0 +1,120 @@
+@import "ui-variables";
+
+@hunk-fg-color: @text-color-subtle;
+@hunk-bg-color: @pane-item-background-color;
+
+.github-HunkView {
+  font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  border-bottom: 1px solid @pane-item-border-color;
+  background-color: @hunk-bg-color;
+
+  &-header {
+    display: flex;
+    align-items: stretch;
+    font-size: .9em;
+    background-color: @panel-heading-background-color;
+    border-bottom: 1px solid @panel-heading-border-color;
+  }
+
+  &-title {
+    flex: 1;
+    line-height: 2.4;
+    padding: 0 @component-padding;
+    color: @text-color-subtle;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  &-stageButton {
+    line-height: 1;
+    font-family: @font-family;
+    border: none;
+    border-left: 1px solid @panel-heading-border-color;
+    background-color: transparent;
+    cursor: default;
+    &:hover  { background-color: @button-background-color-hover; }
+    &:active { background-color: @panel-heading-border-color; }
+  }
+
+  &-line {
+    display:flex;
+    line-height: 1.5em;
+    color: @hunk-fg-color;
+    &.is-unchanged {
+      -webkit-font-smoothing: antialiased;
+    }
+  }
+
+  &-lineNumber {
+    flex: 0 0 3em; // TODO: Make width dynamic, currently capped at 3 chars
+    overflow: hidden;
+    padding: 0 .5em;
+    text-align: right;
+    border-right: 1px solid @base-border-color;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  &-plusMinus {
+    margin-right: 1ch;
+    color: fade(@text-color, 33%);
+  }
+
+  &-lineContent {
+    flex: 1;
+    padding: 0 .5em 0 3ch; // indent 3 characters
+    text-indent: -2ch; // remove indentation for the +/-
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}
+
+
+//
+// States
+// -------------------------------
+
+.github-HunkView-title:hover {
+  color: @text-color-highlight;
+}
+
+.github-HunkView-line {
+
+  // mixin
+  .hunk-line-mixin(@fg; @bg) {
+    &:hover {
+      background-color: @background-color-highlight;
+    }
+    .github-HunkView-lineContent {
+      color: mix(@fg, @text-color-highlight, 50%);
+      background-color: mix(@bg, @hunk-bg-color, 12%);
+    }
+    // hightlight when focused + selected
+    .github-FilePatchView:focus &.is-selected .github-HunkView-lineContent  {
+      color: mix(@fg, @text-color-highlight, 30%);
+      background-color: mix(@bg, @hunk-bg-color, 24%);
+    }
+  }
+
+  &.is-deleted {
+    .hunk-line-mixin(@text-color-error, @background-color-error);
+  }
+
+  &.is-added {
+    .hunk-line-mixin(@text-color-success, @background-color-success);
+  }
+}
+
+// focus colors
+.github-FilePatchView:focus {
+  .github-HunkView.is-selected.is-hunkMode .github-HunkView-title,
+  .github-HunkView.is-selected.is-hunkMode .github-HunkView-header,
+  .github-HunkView-line.is-selected .github-HunkView-lineNumber {
+    color: contrast(@button-background-color-selected);
+    background: @button-background-color-selected;
+  }
+  .github-HunkView-line.is-selected .github-HunkView-lineNumber {
+    border-color: mix(@button-border-color, @button-background-color-selected, 25%);
+  }
+}

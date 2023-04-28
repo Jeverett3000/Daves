@@ -1,0 +1,40 @@
+{
+  "root": true,
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "import/core-modules": [
+      "atom"
+    ]
+  },
+  "extends": ["fbjs/opensource"],
+  "globals": {
+    "atom": true,
+    "advanceClock": true,
+    "assert": true,
+    "HTMLElement": true,
+    "MouseEvent": true,
+    "IDBKeyRange": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "describe": true,
+    "fdescribe": true,
+    "xdescribe": true,
+    "it": true,
+    "xit": true,
+    "waitsForPromise": true,
+    "oneTick": true,
+    "until": true,
+    "runs": true,
+    "openAndActivated": true,
+    "jasmine": true,
+    "expect": true,
+    "spyOn": true,
+    "waitsFor": true,
+    "sinon": true,
+  }
+}
