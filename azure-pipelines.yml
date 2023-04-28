@@ -1,0 +1,232 @@
+jobs:
+- job: Linux
+  pool:
+    vmImage: ubuntu-16.04
+  strategy:
+    matrix:
+      dev:
+        atom_channel: dev
+        atom_name: atom-dev
+      beta:
+        atom_channel: beta
+        atom_name: atom-beta
+      stable:
+        atom_channel: stable
+        atom_name: atom
+  variables:
+    display: ":99"
+  steps:
+  - task: InstallSSHKey@0
+    inputs:
+      hostName: "github.com,192.30.253.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
+      sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC/qYHz4JcYOm4dkpYojlambsR886O24h5VbvzsDxqt+HU4s03v41D9+qg6tB/xh1UjOTSfsb2JLOoDWTg7oog0ruWewLrLbHAyKr6D0nvo7rO0kK3YEX1Bqr3qqDNiAYNyl6FyTCQXDBsdJ+gMCCMV9qhdg0sx9622MINm9DGtOY/pf1PL0PHxVCJ+m3J48aEUJg0kBvYCT8Tte/pC0jAk939hIAqo/Pgko9T0nwO8l0HAYtOizjypoxuHsKGpOc99wZPJrOmnQlsm5VnShHfCJHKnP4eg9+Rr/gzDfvPmCCjCRLvwIxy7mmBIog17lQD0eHSD9CrBrvDnkv1Pwdfpu4rYAHnesWCIGU0DG6zhAjgbR1tnE4uT4hCIQJd+VwF+d/H866osYejkASMdVtulSaXjkkEKk5X1tRcACRQu7YYOD5M6s1rIO1/1zN5T2vsabK4c1ohBvz9bcyCZl5uKNYgWI9aLeCBn+djZ+lPjFqxa6XYPFs83ODQVA13QDf4qro/ld9Hsat+Pna+2dT8pj5vrjTUjAFeoTlpwFK+tHFQ3UHHtoBMYSaFaJpo6w0BoDNAoVZi5qAriOtpDgt8VPLDZcibmqbcVezSqJ2UdSAg5mzF4AIGH/DjbwAXT/zvcQW8hrOPSdpHqXbEFTxTVllgYOQ1VeZ1cBlIv2v4nEQ== smashwilson@azure"
+      sshKeySecureFile: azure_rsa
+  - template: script/azure-pipelines/linux-install.yml
+    parameters:
+      atom_channel: $(atom_channel)
+      atom_name: $(atom_name)
+  - bash: |
+      "/tmp/atom/usr/bin/${ATOM_NAME}" --test test/
+    displayName: run tests
+    env:
+      TEST_JUNIT_XML_PATH: $(Agent.HomeDirectory)/test-results.xml
+      ATOM_GITHUB_BABEL_ENV: coverage
+      FORCE_COLOR: 0
+      MOCHA_TIMEOUT: 60000
+      UNTIL_TIMEOUT: 30000
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: $(Agent.HomeDirectory)/test-results.xml
+      testRunTitle: Linux $(atom_channel)
+    condition: succeededOrFailed()
+  - bash: npm run report:coverage
+    displayName: generate code coverage reports
+    condition: succeededOrFailed()
+  - bash: npm run codecov -- --build="Linux $(atom_channel)"
+    displayName: publish code coverage to CodeCov
+    env:
+      CODECOV_TOKEN: $(codecov.token)
+    condition: succeededOrFailed()
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: cobertura
+      summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml
+      reportDirectory: $(System.DefaultworkingDirectory)/coverage/
+    condition: succeededOrFailed()
+
+- job: MacOS
+  pool:
+    vmImage: macos-10.13
+  strategy:
+    matrix:
+      dev:
+        atom_channel: dev
+        atom_app: Atom Dev.app
+      beta:
+        atom_channel: beta
+        atom_app: Atom Beta.app
+      stable:
+        atom_channel: stable
+        atom_app: Atom.app
+  steps:
+  - task: InstallSSHKey@0
+    inputs:
+      hostName: "github.com,192.30.253.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
+      sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC/qYHz4JcYOm4dkpYojlambsR886O24h5VbvzsDxqt+HU4s03v41D9+qg6tB/xh1UjOTSfsb2JLOoDWTg7oog0ruWewLrLbHAyKr6D0nvo7rO0kK3YEX1Bqr3qqDNiAYNyl6FyTCQXDBsdJ+gMCCMV9qhdg0sx9622MINm9DGtOY/pf1PL0PHxVCJ+m3J48aEUJg0kBvYCT8Tte/pC0jAk939hIAqo/Pgko9T0nwO8l0HAYtOizjypoxuHsKGpOc99wZPJrOmnQlsm5VnShHfCJHKnP4eg9+Rr/gzDfvPmCCjCRLvwIxy7mmBIog17lQD0eHSD9CrBrvDnkv1Pwdfpu4rYAHnesWCIGU0DG6zhAjgbR1tnE4uT4hCIQJd+VwF+d/H866osYejkASMdVtulSaXjkkEKk5X1tRcACRQu7YYOD5M6s1rIO1/1zN5T2vsabK4c1ohBvz9bcyCZl5uKNYgWI9aLeCBn+djZ+lPjFqxa6XYPFs83ODQVA13QDf4qro/ld9Hsat+Pna+2dT8pj5vrjTUjAFeoTlpwFK+tHFQ3UHHtoBMYSaFaJpo6w0BoDNAoVZi5qAriOtpDgt8VPLDZcibmqbcVezSqJ2UdSAg5mzF4AIGH/DjbwAXT/zvcQW8hrOPSdpHqXbEFTxTVllgYOQ1VeZ1cBlIv2v4nEQ== smashwilson@azure"
+      sshKeySecureFile: azure_rsa
+  - template: script/azure-pipelines/macos-install.yml
+    parameters:
+      atom_channel: $(atom_channel)
+      atom_app: $(atom_app)
+  - bash: |
+      "/tmp/atom/${ATOM_APP}/Contents/Resources/app/atom.sh" --test test/
+    displayName: run tests
+    env:
+      TEST_JUNIT_XML_PATH: $(Agent.HomeDirectory)/test-results.xml
+      ATOM_GITHUB_BABEL_ENV: coverage
+      FORCE_COLOR: 0
+      MOCHA_TIMEOUT: 60000
+      UNTIL_TIMEOUT: 30000
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: $(Agent.HomeDirectory)/test-results.xml
+      testRunTitle: MacOS $(atom_channel)
+    condition: succeededOrFailed()
+  - bash: npm run report:coverage
+    displayName: generate code coverage reports
+    condition: succeededOrFailed()
+  - bash: npm run codecov -- --build="MacOS $(atom_channel)"
+    displayName: publish code coverage to CodeCov
+    env:
+      CODECOV_TOKEN: $(codecov.token)
+    condition: succeededOrFailed()
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: cobertura
+      summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml
+      reportDirectory: $(System.DefaultworkingDirectory)/coverage/
+    condition: succeededOrFailed()
+
+- job: Windows
+  pool:
+    vmImage: vs2015-win2012r2
+  strategy:
+    matrix:
+      dev:
+        atom_channel: dev
+        atom_directory: Atom Dev
+      beta:
+        atom_channel: beta
+        atom_directory: Atom Beta
+      stable:
+        atom_channel: stable
+        atom_directory: Atom
+  steps:
+  - task: InstallSSHKey@0
+    inputs:
+      hostName: "github.com,192.30.253.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
+      sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC/qYHz4JcYOm4dkpYojlambsR886O24h5VbvzsDxqt+HU4s03v41D9+qg6tB/xh1UjOTSfsb2JLOoDWTg7oog0ruWewLrLbHAyKr6D0nvo7rO0kK3YEX1Bqr3qqDNiAYNyl6FyTCQXDBsdJ+gMCCMV9qhdg0sx9622MINm9DGtOY/pf1PL0PHxVCJ+m3J48aEUJg0kBvYCT8Tte/pC0jAk939hIAqo/Pgko9T0nwO8l0HAYtOizjypoxuHsKGpOc99wZPJrOmnQlsm5VnShHfCJHKnP4eg9+Rr/gzDfvPmCCjCRLvwIxy7mmBIog17lQD0eHSD9CrBrvDnkv1Pwdfpu4rYAHnesWCIGU0DG6zhAjgbR1tnE4uT4hCIQJd+VwF+d/H866osYejkASMdVtulSaXjkkEKk5X1tRcACRQu7YYOD5M6s1rIO1/1zN5T2vsabK4c1ohBvz9bcyCZl5uKNYgWI9aLeCBn+djZ+lPjFqxa6XYPFs83ODQVA13QDf4qro/ld9Hsat+Pna+2dT8pj5vrjTUjAFeoTlpwFK+tHFQ3UHHtoBMYSaFaJpo6w0BoDNAoVZi5qAriOtpDgt8VPLDZcibmqbcVezSqJ2UdSAg5mzF4AIGH/DjbwAXT/zvcQW8hrOPSdpHqXbEFTxTVllgYOQ1VeZ1cBlIv2v4nEQ== smashwilson@azure"
+      sshKeySecureFile: azure_rsa
+  - template: script/azure-pipelines/windows-install.yml
+    parameters:
+      atom_channel: $(atom_channel)
+      atom_directory: $(atom_directory)
+  - powershell: |
+      Set-StrictMode -Version Latest
+      $script:ATOMROOT = "$env:AGENT_HOMEDIRECTORY/atom"
+      $script:ATOM_SCRIPT_PATH = "$script:ATOMROOT\$env:ATOM_DIRECTORY\resources\cli\atom.cmd"
+
+      # Normalize %TEMP% as a long (non 8.3) path.
+      $env:TEMP = (Get-Item -LiteralPath $env:TEMP).FullName
+
+      $env:ELECTRON_NO_ATTACH_CONSOLE = "true"
+      [Environment]::SetEnvironmentVariable("ELECTRON_NO_ATTACH_CONSOLE", "true", "User")
+      $env:ELECTRON_ENABLE_LOGGING = "YES"
+      [Environment]::SetEnvironmentVariable("ELECTRON_ENABLE_LOGGING", "YES", "User")
+
+      Write-Host "Running tests"
+      & "$script:ATOM_SCRIPT_PATH" --test test 2>&1 | %{ "$_" }
+
+      if ($LASTEXITCODE -ne 0) {
+        Write-Host "Specs Failed"
+        $host.SetShouldExit($LASTEXITCODE)
+        exit
+      }
+    displayName: run tests
+    env:
+      TEST_JUNIT_XML_PATH: $(Agent.HomeDirectory)/test-results.xml
+      ATOM_GITHUB_BABEL_ENV: coverage
+      ATOM_GITHUB_SKIP_SYMLINKS: 1
+      FORCE_COLOR: 0
+      MOCHA_TIMEOUT: 60000
+      UNTIL_TIMEOUT: 30000
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: $(Agent.HomeDirectory)/test-results.xml
+      testRunTitle: Windows $(atom_channel)
+    condition: succeededOrFailed()
+  - powershell: npm run report:coverage
+    displayName: generate code coverage reports
+    condition: succeededOrFailed()
+  - powershell: npm run codecov -- --build="Windows $(atom_channel)"
+    displayName: publish code coverage to CodeCov
+    env:
+      CODECOV_TOKEN: $(codecov.token)
+    condition: succeededOrFailed()
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: cobertura
+      summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml
+      reportDirectory: $(System.DefaultworkingDirectory)/coverage/
+    condition: succeededOrFailed()
+
+- job: Lint
+  pool:
+    vmImage: ubuntu-16.04
+  variables:
+    display: ":99"
+    atom_channel: dev
+  steps:
+  - task: InstallSSHKey@0
+    inputs:
+      hostName: "github.com,192.30.253.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
+      sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC/qYHz4JcYOm4dkpYojlambsR886O24h5VbvzsDxqt+HU4s03v41D9+qg6tB/xh1UjOTSfsb2JLOoDWTg7oog0ruWewLrLbHAyKr6D0nvo7rO0kK3YEX1Bqr3qqDNiAYNyl6FyTCQXDBsdJ+gMCCMV9qhdg0sx9622MINm9DGtOY/pf1PL0PHxVCJ+m3J48aEUJg0kBvYCT8Tte/pC0jAk939hIAqo/Pgko9T0nwO8l0HAYtOizjypoxuHsKGpOc99wZPJrOmnQlsm5VnShHfCJHKnP4eg9+Rr/gzDfvPmCCjCRLvwIxy7mmBIog17lQD0eHSD9CrBrvDnkv1Pwdfpu4rYAHnesWCIGU0DG6zhAjgbR1tnE4uT4hCIQJd+VwF+d/H866osYejkASMdVtulSaXjkkEKk5X1tRcACRQu7YYOD5M6s1rIO1/1zN5T2vsabK4c1ohBvz9bcyCZl5uKNYgWI9aLeCBn+djZ+lPjFqxa6XYPFs83ODQVA13QDf4qro/ld9Hsat+Pna+2dT8pj5vrjTUjAFeoTlpwFK+tHFQ3UHHtoBMYSaFaJpo6w0BoDNAoVZi5qAriOtpDgt8VPLDZcibmqbcVezSqJ2UdSAg5mzF4AIGH/DjbwAXT/zvcQW8hrOPSdpHqXbEFTxTVllgYOQ1VeZ1cBlIv2v4nEQ== smashwilson@azure"
+      sshKeySecureFile: azure_rsa
+  - template: script/azure-pipelines/linux-install.yml
+    parameters:
+      atom_channel: $(atom_channel)
+      atom_name: atom-dev
+  - bash: /tmp/atom/usr/share/atom-dev/resources/app/apm/node_modules/.bin/npm run lint
+    displayName: run the linter
+
+- job: Snapshot
+  pool:
+    vmImage: ubuntu-16.04
+  variables:
+    display: ":99"
+    atom_channel: dev
+  steps:
+  - task: InstallSSHKey@0
+    inputs:
+      hostName: "github.com,192.30.253.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
+      sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC/qYHz4JcYOm4dkpYojlambsR886O24h5VbvzsDxqt+HU4s03v41D9+qg6tB/xh1UjOTSfsb2JLOoDWTg7oog0ruWewLrLbHAyKr6D0nvo7rO0kK3YEX1Bqr3qqDNiAYNyl6FyTCQXDBsdJ+gMCCMV9qhdg0sx9622MINm9DGtOY/pf1PL0PHxVCJ+m3J48aEUJg0kBvYCT8Tte/pC0jAk939hIAqo/Pgko9T0nwO8l0HAYtOizjypoxuHsKGpOc99wZPJrOmnQlsm5VnShHfCJHKnP4eg9+Rr/gzDfvPmCCjCRLvwIxy7mmBIog17lQD0eHSD9CrBrvDnkv1Pwdfpu4rYAHnesWCIGU0DG6zhAjgbR1tnE4uT4hCIQJd+VwF+d/H866osYejkASMdVtulSaXjkkEKk5X1tRcACRQu7YYOD5M6s1rIO1/1zN5T2vsabK4c1ohBvz9bcyCZl5uKNYgWI9aLeCBn+djZ+lPjFqxa6XYPFs83ODQVA13QDf4qro/ld9Hsat+Pna+2dT8pj5vrjTUjAFeoTlpwFK+tHFQ3UHHtoBMYSaFaJpo6w0BoDNAoVZi5qAriOtpDgt8VPLDZcibmqbcVezSqJ2UdSAg5mzF4AIGH/DjbwAXT/zvcQW8hrOPSdpHqXbEFTxTVllgYOQ1VeZ1cBlIv2v4nEQ== smashwilson@azure"
+      sshKeySecureFile: azure_rsa
+  - template: script/azure-pipelines/linux-install.yml
+    parameters:
+      atom_channel: $(atom_channel)
+      atom_name: atom-dev
+  - bash: /tmp/atom/usr/bin/atom-dev --test test/
+    displayName: run tests
+    env:
+      ATOM_GITHUB_TEST_SUITE: snapshot
+      TEST_JUNIT_XML_PATH: $(Agent.HomeDirectory)/test-results.xml
+      FORCE_COLOR: 0
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: $(Agent.HomeDirectory)/test-results.xml
+      testRunTitle: Snapshot
+    condition: succeededOrFailed()
