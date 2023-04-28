@@ -1,0 +1,41 @@
+.github-StubItem-github-tab-controller,
+.github-GithubTabController-root {
+  flex: 1;
+  display: flex;
+}
+
+.github-GithubTabController {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  &-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-no-remotes {
+    margin: 10px;
+    font-size: @font-size * 1.25;
+  }
+
+  .github-RemoteSelector {
+    font-size: @font-size * 1.25;
+
+    p {
+      text-align: center;
+      margin: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 1em;
+    }
+
+    a {
+      color: @text-color-info;
+    }
+  }
+}
